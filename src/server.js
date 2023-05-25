@@ -8,6 +8,7 @@ import minimist from "minimist";
 import RouterProds from "./router/products_router.js";
 import RouterCart from "./router/carts_router.js";
 import RouterSession from "./router/session_router.js";
+import RouterOrders from "./router/orders_router.js"
 import { urlMongoDB, sessionKey } from "./DB/connection.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
@@ -70,6 +71,7 @@ PassportLogic();
 app.use("/api/products", RouterProds);
 app.use("/api/cart", RouterCart);
 app.use("/session", RouterSession);
+app.use("/orders", RouterOrders);
 
 app.get("/", checkAuthentication, gzipMiddleware, (req, res) => {
   

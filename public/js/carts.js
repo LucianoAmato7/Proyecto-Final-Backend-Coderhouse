@@ -113,7 +113,7 @@ export async function CartView() {
 
 async function CreateOrder(cartID, userID) {
   try {
-    await fetch(`../../api/cart/${cartID}/order/${userID}`, {
+    await fetch(`../../orders/${cartID}/neworder/${userID}`, {
       method: "POST",
     })
     .then((res) => res.json())

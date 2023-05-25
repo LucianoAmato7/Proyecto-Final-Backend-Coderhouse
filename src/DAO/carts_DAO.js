@@ -1,11 +1,14 @@
 import { cart_Model } from "../models/cart_model.js";
 import { user_Model } from "../models/user_model.js";
+import { prods_Model } from "../models/product_model.js";
 import { logger } from "../../config/winston_config.js";
+import { cartDTO } from "../DTO/cart_DTO.js";
 
 class CartsDaoMongoDB {
   constructor() {
     this.model_cart = cart_Model;
     this.model_user = user_Model;
+    this.model_prods = prods_Model;
   }
 
   async GetCarts() {
@@ -18,14 +21,19 @@ class CartsDaoMongoDB {
     }
   }
 
-  // CREAR Y APLICAR DTO.
+  async ListById(id) {
+    try {
+      const data = await this.model_cart.findById(id);
+      return data;
+    } catch (error) {
+      logger.error(`Error al listar los datos: ${error}`);
+      return { error: `Error al listar los datos: ${error}` };
+    }
+  }
+
   async CreateCart() {
     try {
-      const date = new Date().toLocaleString();
-      const cartToAdd = {
-        timestamp: date,
-        products: [],
-      };
+      const cartToAdd = cartDTO()
       const newCart = new this.model_cart(cartToAdd);
       const savedCart = await newCart.save();
       logger.info("Carrito creado con exito");
@@ -36,17 +44,12 @@ class CartsDaoMongoDB {
     }
   }
 
-  //CREAR Y APLICAR DTO / VE SI DEJARLO ACA O MODEL A USER_DAO
   async assignsCartID(userID) {
     try {
       const user = await this.model_user.find({ _id: userID });
       const userCart = user[0].cartID;
       if (!userCart.length > 0) {
-        const date = new Date().toLocaleString();
-        const cartToAdd = {
-          timestamp: date,
-          products: [],
-        };
+        const cartToAdd = cartDTO();
         const newCart = new this.model_cart(cartToAdd);
         const savedCart = await newCart.save();
 
@@ -67,17 +70,6 @@ class CartsDaoMongoDB {
     }
   }
 
-  async ListById(id) {
-    try {
-      const data = await this.model_cart.findById(id);
-      return data;
-    } catch (error) {
-      logger.error(`Error al listar los datos: ${error}`);
-      return { error: `Error al listar los datos: ${error}` };
-    }
-  }
-
-  //CART - lista los productos de x carrito
   async GetProds(idCart) {
     try {
       const cart = await this.model_cart.findById(idCart);
@@ -88,10 +80,8 @@ class CartsDaoMongoDB {
     }
   }
 
-  //CART - inserta un producto en un carrito
   async addProdToCart(idCart, idProd) {
-    //VER COMO OBTENER PROD
-    const prod = await CartsDaoMongoDB.ListById(idProd);
+    const prod = await this.model_prods.findById(idProd);
     try {
       const cart = await this.model_cart.findById(idCart);
       const prodsArray = cart.products;
@@ -101,14 +91,13 @@ class CartsDaoMongoDB {
         { products: prodsArray }
       );
       logger.info("Producto agregado con exito");
-      return await this.model_cart.findById(idCart);
+      return cart;
     } catch (error) {
       logger.error(`Error al insertar un producto en el carrito: ${error}`);
       return { error: `Error al insertar un producto en el carrito: ${error}` };
     }
   }
 
-  //CART - elimina un producto de un carrito
   async DeleteProd_cart(idCart, idProd) {
     try {
       const cart = await this.model_cart.findById(idCart);
@@ -116,15 +105,13 @@ class CartsDaoMongoDB {
       const update = prodsArray.filter((p) => p._id != idProd);
       await this.model_cart.updateOne({ _id: idCart }, { products: update });
       logger.info("Producto eliminado con exito");
-      return await this.model_cart.findById({ _id: idCart });
+      return cart;
     } catch (error) {
       logger.error(`Error al eliminar el producto: ${error}`);
       return { error: "Error al intentar eliminar el producto" };
     }
   }
 
-  //CART - elimina por id y elimina el cartID asignado en usuario
-  //VER UBICACION
   async DeleteCart(cartID, userID) {
     try {
       await this.model_cart.deleteOne({ _id: cartID });

@@ -1,4 +1,5 @@
 # RUTAS
+## PRODUCTOS
 
 `/api/products (GET)`
 -devuelve todos los productos
@@ -14,6 +15,8 @@
 
 `/api/products/:id (DELETE)` 
 -elimina un producto según su id.
+
+## CARRITOS
 
 `/api/cart (GET)` 
 -Crea un carrito y devuelve su id.
@@ -33,9 +36,15 @@
 `/api/cart/:idCart/products/:idProd (DELETE)` 
 -Eliminar un producto del carrito por su id de carrito y de producto.
 
-`/api/cart/:idCart/order/:idUser (POST)`
+## ORDERS
+
+`/orders/:idCart/neworder/:idUser (POST)`
 -Crea una nueva orden de compra y notifica al admin y al user.
 
+`/orders/:idUser (GET)`
+-Trae el historial de ordenes del usuario.
+
+## SESION
 
 `/session/login (GET)`
 -Renderiza el formulario de inicio de sesión.

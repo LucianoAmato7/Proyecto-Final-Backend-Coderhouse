@@ -1,11 +1,24 @@
 import products_repository from "../repository/products_repository.js"
-
-//AGREGAR CONTROLLERS
+import { logger } from "../../config/winston_config.js"
 
 export const GetProds_controller = async (req, res) => {
-  const productos = await products_repository.find();
-  res.json(productos);
+  try{
+    const productos = await products_repository.find();
+    res.json(productos);
+  }catch(err){
+    logger.error(err);
+  }
 };
+
+export const GetProdsByID_controller = async (req, res) => {
+  try{
+    let {id} = req.params;
+    const producto = await products_repository.findByID(id);
+    res.json(producto);
+  }catch(err){
+    logger.error(err);
+  }
+}
 
 export const CreateProd_controller = async (req, res) => {
   try{
@@ -18,7 +31,19 @@ export const CreateProd_controller = async (req, res) => {
 
     return res.json(result)
   }catch(err){
-    console.log(err);
+    logger.error(err);
+  }
+}
+
+export const UpdateProd_controller = async (req, res) => {
+  //VER SI SE RECIBE EL BODY DE DATOS A MODIFICAR
+  try{
+    const data = req.body 
+    const {id} = req.params
+    const prodUpdate = await products_repository.update(id, data)
+    return prodUpdate
+  }catch(err){
+    logger.error(err)
   }
 }
 
@@ -28,6 +53,6 @@ export const DeleteProd_controller = async (req, res) => {
     const result = await products_repository.delete(id)
     return res.json(result)
   }catch(err){
-    console.log(err);
+    logger.error(err);
   }
 }

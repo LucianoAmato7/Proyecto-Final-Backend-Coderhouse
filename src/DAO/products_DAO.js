@@ -16,7 +16,7 @@ class ProductsDaoMongoDB {
     }
   }
 
-  async ListById(id) {
+  async ProdById(id) {
     try {
       const data = await this.model.findById(id);
       return data;
@@ -26,7 +26,6 @@ class ProductsDaoMongoDB {
     }
   }
 
-  //crea un producto. Recibe title, brand, price, thumbnail y stock.
   async CreateProd(prodtoAdd) {
     try {
       const existingProduct = await this.model.findOne({
@@ -42,9 +41,9 @@ class ProductsDaoMongoDB {
       }
 
       const newProd = new this.model(prodtoAdd);
-      await newProd.save();
-      console.log("Producto creado con exito");
-      return prodtoAdd;
+      const prodSaved = await newProd.save();
+      logger.info("Producto creado con exito");
+      return prodSaved._id.toString();
     } catch (error) {
       logger.error(`Error en la creacion del producto: ${error}`);
       return { error: `Error en la creacion del producto: ${error}` };
