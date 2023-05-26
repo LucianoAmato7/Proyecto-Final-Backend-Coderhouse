@@ -11,12 +11,12 @@ class ProductsFactory {
       return instance;
     }
 
-    this.productosDAO = null;
+    this.productsDAO = null;
     instance = this;
   }
   
   getDAO() {
-    if (!this.productosDAO) {
+    if (!this.productsDAO) {
       switch(database_type) {
         case "MONGO":
           this.productsDAO = new ProductsDaoMongoDB();
@@ -26,7 +26,7 @@ class ProductsFactory {
           break;
       }
     }
-    return this.productosDAO;
+    return this.productsDAO;
   }
 }
 

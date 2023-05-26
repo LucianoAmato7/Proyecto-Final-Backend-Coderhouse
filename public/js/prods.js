@@ -9,7 +9,7 @@ async function GetProds() {
       .then((response) => response.json())
       .then((data) => {
         const prods = data;
-
+        
         async function AddToCart(prodID) {
           const cartUserID = document.getElementById("IDcartUser").textContent;
           if (cartUserID) {
@@ -17,12 +17,13 @@ async function GetProds() {
               await fetch(`../../api/cart/${cartUserID}/products/${prodID}`, {
                 method: "POST",
               })
-                .then((response) => response.json())
-                .then((cart) => {
-                  console.log(
-                    `El producto ha sido agregado exitosamente al carrito`
-                  );
-                  CartView();
+                .then((response) => {
+                  if(response.ok){
+                    console.log(
+                      `El producto ha sido agregado exitosamente al carrito`
+                    );
+                    CartView();
+                  }
                 })
                 .catch((error) => {
                   console.log(error);

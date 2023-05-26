@@ -15,7 +15,7 @@ import session from "express-session";
 import passport from "passport";
 import cluster from "cluster";
 import { PassportLogic, checkAuthentication } from "../config/passport_config.js";
-import { dirname } from 'path';
+import { dirname, join } from 'path';
 import { fileURLToPath} from 'url';
 import compression from "compression";
 import getConnectionMongoDB from "./DB/connection.js";
@@ -30,6 +30,7 @@ const server = createServer(app);
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
+const publicPath = join(__dirname, '..', 'public');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,7 +46,7 @@ app.engine(
 app.set('views', __dirname + '/views')
 app.set("view engine", "hbs");
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(publicPath));
 
 app.use(
   session({

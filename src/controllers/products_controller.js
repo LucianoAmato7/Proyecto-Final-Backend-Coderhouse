@@ -6,7 +6,7 @@ export const GetProds_controller = async (req, res) => {
     const productos = await products_repository.find();
     res.json(productos);
   }catch(err){
-    logger.error(err);
+    logger.error(`Error al listar los productos en el CONTROLLER ${err}`);
   }
 };
 

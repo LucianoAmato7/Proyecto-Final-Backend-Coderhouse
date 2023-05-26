@@ -84,7 +84,6 @@ export async function Email_NewOrder(user, cart, orderID) {
 
     await transporter.sendMail(mailOptions);
 
-    logger.info("Email de aviso de nueva orden enviado con exito!");
   } catch (error) {
     logger.error(
       `Error al enviar notificación (EMAIL) de nueva orden: ${error}`

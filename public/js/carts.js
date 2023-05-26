@@ -3,6 +3,9 @@ const orderBtn = document.getElementById("newOrder");
 const userID = document.getElementById("IDcontainer").textContent;
 
 async function DeleteCart(cartID, userID) {
+
+  console.log("DeleteCart ejecutada con exito")
+  
   try {
     await fetch(`../../api/cart/${cartID}/user/${userID}`, {
       method: "DELETE",
@@ -74,7 +77,7 @@ export async function CartView() {
               tables.innerHTML = `
                   <td class="align-middle">${prod._id}</td>
                   <td class="align-middle">${prod.title}</td>
-                  <td class="align-middle">$${prod.price}</td>
+                  <td class="align-middle">u$s${prod.price}</td>
                   <td class="align-middle">
                       <img src=${prod.thumbnail} style="width: 80px">
                   </td>
@@ -120,9 +123,10 @@ async function CreateOrder(cartID, userID) {
     .then((data) => {
       const orderID = data;
       console.log(`Orden creada con exito! ID: ${orderID}`);
-      alert(`Orden creada con exito! ID: ${orderID}`)
       DeleteCart(cartID, userID);
-    });
+    })
+    .catch((err)=>{console.log(err)})
+
   } catch (error) {
     console.log(error);
   }
