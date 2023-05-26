@@ -1,27 +1,23 @@
 import { logger } from "../../config/winston_config.js"
+import order_repository from "../repository/order_repository.js"
 
 export const CreateOrder_controller = async (req, res) => {
     try{
-        let { idCart } = req.params;
         let { idUser } = req.params;
-      
-        //MODIFICAR (HACER UN DAO SEPARADO)
-        cartDaoMongoDB.NewOrder(idUser, idCart).then((data) => {
-          res.json(data);
-        });
+        let { idCart } = req.params;
+        const orderID = await order_repository.create(idUser, idCart)
+        return orderID
     }catch(err){
         logger.error(err)
     }
 }
 
-export const UserOrders = async (req, res) => {
+export const OrdersById_controller = async (req, res) => {
     try{
-
         const {idUser} = req.params;
-
-        
-
+        const orders = await order_repository.ListById(idUser)
+        return orders
     }catch(err){
-
+        logger.error(err)
     }
 }

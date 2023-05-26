@@ -1,13 +1,13 @@
 import { Router } from "express";
 import {
     CreateOrder_controller,
-    UserOrders
+    OrdersById_controller
 } from "../controllers/products_controller.js";
 
 const router = Router();
 
 router.post("/:idCart/neworder/:idUser", CreateOrder_controller);
 
-router.get("/:idUser", UserOrders)
+router.get("/:idUser", OrdersById_controller)
 
 export default router;
