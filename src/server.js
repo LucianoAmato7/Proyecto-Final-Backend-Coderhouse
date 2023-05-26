@@ -9,7 +9,7 @@ import RouterProds from "./router/products_router.js";
 import RouterCart from "./router/carts_router.js";
 import RouterSession from "./router/session_router.js";
 import RouterOrders from "./router/orders_router.js"
-import { urlMongoDB, sessionKey } from "./DB/connection.js";
+import { session_key, urlMongoDB } from "../config/dotenv_config.js"
 import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
@@ -35,7 +35,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-//MOTOR DE PLANTILLA
 app.engine(
   "hbs",
   engine({
@@ -48,26 +47,23 @@ app.set("view engine", "hbs");
 
 app.use(express.static(__dirname + "/public"));
 
-//GUARDA LA SESSION EN MONGODB
 app.use(
   session({
     store: MongoStore.create({
       mongoUrl: urlMongoDB,
     }),
-    secret: sessionKey,
+    secret: session_key,
     resave: true,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60 * 10000 }, // 10 minutos
+    cookie: { secure: false, maxAge: 60 * 10000 },
     rolling: true,
   })
 );
 
-//PASSPORT
 app.use(passport.session());
 app.use(passport.initialize());
 PassportLogic();
 
-//ROUTERS
 app.use("/api/products", RouterProds);
 app.use("/api/cart", RouterCart);
 app.use("/session", RouterSession);

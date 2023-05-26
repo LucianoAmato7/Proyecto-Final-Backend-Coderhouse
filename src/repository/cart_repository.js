@@ -31,18 +31,18 @@ class cart_repository{
     }
 
     async addProdToCart(idCart, idProd){
-        const cart = this.cartDAO.addProdToCart(idCart, idProd)
+        const cart = await this.cartDAO.addProdToCart(idCart, idProd)
         return cart
     }
 
     async deleteProdfromCart(idCart, idProd){
-        const cart = this.cartDAO.DeleteProd_cart(idCart, idProd)
+        const cart = await this.cartDAO.DeleteProd_cart(idCart, idProd)
         return cart
     }
 
     async deleteCart(cartID, userID){
-        const userID = this.cartDAO.DeleteCart(cartID, userID)
-        return userID
+        const userID_ = await this.cartDAO.DeleteCart(cartID, userID)
+        return userID_
     }
 }
 
