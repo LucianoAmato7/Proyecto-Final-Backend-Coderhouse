@@ -8,7 +8,7 @@
 -devuelve un producto según su id
 
 `/api/products (POST)` 
--recibe y agrega un producto, y lo devuelve con su id asignado.
+-recibe y agrega un producto, y lo devuelve con su id asignado. (body: {title, brand, price, stock, thumbnail})
 
 `/api/products/:id (PUT)` 
 -recibe y actualiza un producto según su id.

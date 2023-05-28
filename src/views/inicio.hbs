@@ -38,20 +38,35 @@
 
     <div class="jumbotron">
         <h2 class="mb-5">Carrito:</h2>
-            <div class="table-responsive" id="CartContainer">
-                <table class="table table-dark" id="tableCartContainer">
-                </table>
-            </div>
+        <div class="table-responsive" id="CartContainer">
+            <table class="table table-dark" id="tableCartContainer">
+            </table>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
             <button id="newOrder" class="btn btn-success mt-2">Enviar orden</button>
+            <span id="total" class="align-self-center" style="font-size: 2rem"></span>
+        </div>
     </div>
-    
+
+    <div class="jumbotron">
+
+        <h2 class="mb-5" id="OrdersTitle"></h2>
+        <div id="ordersContainer"></div>
+
+    </div>
+
 </div>    
 
 <script 
     type="module" 
-    src="/js/carts.js"
+    src="/js/carts_view.js"
 ></script>
 <script 
     type="module" 
-    src="/js/prods.js"
+    src="/js/prods_view.js"
+></script>
+<script 
+    type="module" 
+    src="/js/orders_view.js"
 ></script>

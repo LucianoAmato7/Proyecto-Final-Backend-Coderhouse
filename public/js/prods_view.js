@@ -1,4 +1,4 @@
-import { CartView } from "./carts.js";
+import { CartView } from "./carts_view.js";
 
 const ProdContainer = document.getElementById("ProdContainer");
 

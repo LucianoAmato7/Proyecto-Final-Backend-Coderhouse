@@ -15,6 +15,7 @@ export async function MsjToUser_Twilio(user, orderID) {
       from: twilio_PhoneNumber,
       to: user.phone_number,
     });
+    logger.info(message)
   } catch (error) {
     logger.error(
       `Error al enviarle MSJ de texto a usuario notificando nueva orden: ${error}`

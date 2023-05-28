@@ -1,10 +1,11 @@
+import { OrdersView } from "./orders_view.js"
+
 const cartContainer = document.getElementById("CartContainer");
 const orderBtn = document.getElementById("newOrder");
-const userID = document.getElementById("IDcontainer").textContent;
+export const userID = document.getElementById("IDcontainer").textContent;
+const totalSpan = document.getElementById("total")
 
 async function DeleteCart(cartID, userID) {
-
-  console.log("DeleteCart ejecutada con exito")
   
   try {
     await fetch(`../../api/cart/${cartID}/user/${userID}`, {
@@ -52,9 +53,9 @@ export async function CartView() {
 
           if (cartProds.length > 0) {
             cartContainer.innerHTML = `
-          <table class="table table-dark" id="tableCartContainer">
-          </table>
-          `;
+            <table class="table table-dark" id="tableCartContainer">
+            </table>
+            `;
 
             const tableCartContainer =
               document.getElementById("tableCartContainer");
@@ -97,9 +98,25 @@ export async function CartView() {
               });
             });
 
+            function TotalPrice(products) {
+              let total = 0;
+              for (let i = 0; i < products.length; i++) {
+                const priceString = products[i].price;
+                const priceNumber = parseFloat(priceString);
+            
+                if (!isNaN(priceNumber)) {
+                  total += priceNumber;
+                }
+              }
+              return total;
+            }
+
+            totalSpan.innerHTML = `Total: u$s ${TotalPrice(cartProds)}`
+
           } else {
             cartContainer.innerHTML =
               '<h3 class="alert alert-danger">No se encontraron productos</h3>';
+            totalSpan.innerHTML = ``
           }
 
         });
@@ -124,6 +141,7 @@ async function CreateOrder(cartID, userID) {
       const orderID = data;
       console.log(`Orden creada con exito! ID: ${orderID}`);
       DeleteCart(cartID, userID);
+      OrdersView(userID);
     })
     .catch((err)=>{console.log(err)})
 

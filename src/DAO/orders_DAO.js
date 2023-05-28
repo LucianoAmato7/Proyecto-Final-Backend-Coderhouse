@@ -4,7 +4,8 @@ import { order_Model } from "../models/order_model.js";
 import { logger } from "../../config/winston_config.js";
 import { orderDTO } from "../DTO/order_DTO.js";
 import { Email_NewOrder } from "../../config/nodemailer_config.js";
-import { MsjToUser_Twilio } from "../../config/twilio_config.js"
+import { MsjToUser_Twilio } from "../../config/twilio_config.js";
+import mongoose from "mongoose";
 
 class OrdersDaoMongoDB {
   constructor() {
@@ -22,9 +23,10 @@ class OrdersDaoMongoDB {
       const newOrder = new this.model_order(orderToAdd);
       const savedOrder = await newOrder.save();
       const orderID = savedOrder._id.toString();
+      const orderTotal = orderToAdd.total
       logger.info(`Nueva orden generada con exito!: ${orderID}`);
 
-      await Email_NewOrder(user, cart, orderID)
+      await Email_NewOrder(user, cart, orderID, orderTotal)
       .then(() => {
         logger.info("Email de aviso de nueva orden enviado con exito!");
       })
@@ -45,10 +47,10 @@ class OrdersDaoMongoDB {
 
   async OrdersById(idUser){
     try{
-      const orders = await this.model_order.find({ 'user.userID': idUser }).toArray();
+      const orders = await this.model_order.find({ 'user.userID': idUser });
       return orders
     }catch(err){
-      logger.error(err)
+      logger.error(`Error al listar ordenes por ID en DAO: ${err}`)
     }
   }
 }

@@ -48,7 +48,7 @@ export async function Email_NewUser(user) {
   }
 }
 
-export async function Email_NewOrder(user, cart, orderID) {
+export async function Email_NewOrder(user, cart, orderID, orderTotal) {
   try {
     const prodList = `${cart.products
       .map(
@@ -70,6 +70,7 @@ export async function Email_NewOrder(user, cart, orderID) {
                 <li>ID de carrito: ${user.cartID}</li>
             </ul>
             <p>Cantidad de productos: ${cart.products.length}</p>
+            <p>Total: u$s ${orderTotal}</p>
             <p>N° orden: ${orderID}</p>
             <ul>${prodList}</ul>
         </div>

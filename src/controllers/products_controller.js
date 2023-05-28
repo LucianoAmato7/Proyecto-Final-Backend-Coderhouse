@@ -36,12 +36,11 @@ export const CreateProd_controller = async (req, res) => {
 }
 
 export const UpdateProd_controller = async (req, res) => {
-  //VER SI SE RECIBE EL BODY DE DATOS A MODIFICAR
   try{
     const data = req.body 
     const {id} = req.params
     const prodUpdate = await products_repository.update(id, data)
-    return prodUpdate
+    res.json(prodUpdate)
   }catch(err){
     logger.error(err)
   }
