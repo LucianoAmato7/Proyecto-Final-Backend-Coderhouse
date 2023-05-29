@@ -16,8 +16,9 @@ export async function OrdersView(idUser) {
       </table>
       `;
 
-      const tableOrdersContainer =
-      document.getElementById("tableOrdersContainer");
+      const tableOrdersContainer = document.getElementById(
+        "tableOrdersContainer"
+      );
 
       if (orders.length > 0) {
         let tableTittle = document.createElement("tr");
@@ -41,7 +42,7 @@ export async function OrdersView(idUser) {
                     <td class="align-middle">u$s ${total}</td>
                 `;
 
-            tableOrdersContainer.appendChild(tables);
+          tableOrdersContainer.appendChild(tables);
         });
       } else {
         ordersContainer.innerHTML =

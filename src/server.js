@@ -8,29 +8,27 @@ import minimist from "minimist";
 import RouterProds from "./router/products_router.js";
 import RouterCart from "./router/carts_router.js";
 import RouterSession from "./router/session_router.js";
-import RouterOrders from "./router/orders_router.js"
-import { session_key, urlMongoDB } from "../config/dotenv_config.js"
+import RouterOrders from "./router/orders_router.js";
+import RouterHome from "./router/home_router.js";
+import { session_key, urlMongoDB } from "../config/dotenv_config.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
 import cluster from "cluster";
-import { PassportLogic, checkAuthentication } from "../config/passport_config.js";
-import { dirname, join } from 'path';
-import { fileURLToPath} from 'url';
-import compression from "compression";
+import { PassportLogic } from "../config/passport_config.js";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import getConnectionMongoDB from "./DB/connection.js";
 
 const connection = getConnectionMongoDB();
 await connection.MongoDB_Connect();
 
-const gzipMiddleware = compression();
-
 const app = express();
-const server = createServer(app);
+export const server = createServer(app);
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
-const publicPath = join(__dirname, '..', 'public');
+const publicPath = join(__dirname, "..", "public");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,7 +41,7 @@ app.engine(
     defaultLayout: "index.hbs",
   })
 );
-app.set('views', __dirname + '/views')
+app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
 
 app.use(express.static(publicPath));
@@ -69,23 +67,7 @@ app.use("/api/products", RouterProds);
 app.use("/api/cart", RouterCart);
 app.use("/session", RouterSession);
 app.use("/orders", RouterOrders);
-
-app.get("/", checkAuthentication, gzipMiddleware, (req, res) => {
-  
-  req.session.cookie.expires = new Date(Date.now() + 600000);
-
-  let user = req.session.user;
-
-  //BOOLEANO PARA LA URL DE LA IMAGEN DEL AVATAR, YA QUE DEPENDE DE SI EL HOST ES LOCAL O REMOTO.
-  let hostBoolean = req.hostname == 'localhost' ? true : false;
-  
-  let url = {protocol: req.protocol, host: req.hostname, port: server.address().port, hostBoolean}
-
-  let toRender = Object.assign({}, user, url);
-
-  res.render("inicio", { toRender });
-
-});
+app.use("/", RouterHome);
 
 app.use("*", (req, res) => {
   logger.warn(

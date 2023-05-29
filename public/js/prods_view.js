@@ -4,12 +4,11 @@ const ProdContainer = document.getElementById("ProdContainer");
 
 async function GetProds() {
   try {
-    //devuelve todos los productos
     await fetch("../../api/products")
       .then((response) => response.json())
       .then((data) => {
         const prods = data;
-        
+
         async function AddToCart(prodID) {
           const cartUserID = document.getElementById("IDcartUser").textContent;
           if (cartUserID) {
@@ -18,10 +17,7 @@ async function GetProds() {
                 method: "POST",
               })
                 .then((response) => {
-                  if(response.ok){
-                    console.log(
-                      `El producto ha sido agregado exitosamente al carrito`
-                    );
+                  if (response.ok) {
                     CartView();
                   }
                 })

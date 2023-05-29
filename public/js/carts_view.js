@@ -1,19 +1,18 @@
-import { OrdersView } from "./orders_view.js"
+import { OrdersView } from "./orders_view.js";
 
 const cartContainer = document.getElementById("CartContainer");
 const orderBtn = document.getElementById("newOrder");
 export const userID = document.getElementById("IDcontainer").textContent;
-const totalSpan = document.getElementById("total")
+const totalSpan = document.getElementById("total");
 
 async function DeleteCart(cartID, userID) {
-  
   try {
     await fetch(`../../api/cart/${cartID}/user/${userID}`, {
       method: "DELETE",
     })
-    .then((res) => res.json())
-    .catch((error) => console.log(error));
-    CartView()
+      .then((res) => res.json())
+      .catch((error) => console.log(error));
+    CartView();
   } catch (error) {
     console.log(`error al ejecutar el fetch para eliminar carrito: ${error}`);
   }
@@ -27,7 +26,6 @@ async function DeleteProd(idCart, idProd) {
       .then((res) => res.json())
       .then((cart) => {
         CartView();
-        console.log(`Producto eliminado con exito`);
       })
       .catch((error) => console.log(error));
   } catch (error) {
@@ -103,7 +101,7 @@ export async function CartView() {
               for (let i = 0; i < products.length; i++) {
                 const priceString = products[i].price;
                 const priceNumber = parseFloat(priceString);
-            
+
                 if (!isNaN(priceNumber)) {
                   total += priceNumber;
                 }
@@ -111,14 +109,12 @@ export async function CartView() {
               return total;
             }
 
-            totalSpan.innerHTML = `Total: u$s ${TotalPrice(cartProds)}`
-
+            totalSpan.innerHTML = `Total: u$s ${TotalPrice(cartProds)}`;
           } else {
             cartContainer.innerHTML =
               '<h3 class="alert alert-danger">No se encontraron productos</h3>';
-            totalSpan.innerHTML = ``
+            totalSpan.innerHTML = ``;
           }
-
         });
     } else {
       console.log(`NO SE RECIBE EL USERID: ${userID}`);
@@ -136,15 +132,15 @@ async function CreateOrder(cartID, userID) {
     await fetch(`../../orders/${cartID}/neworder/${userID}`, {
       method: "POST",
     })
-    .then((res) => res.json())
-    .then((data) => {
-      const orderID = data;
-      console.log(`Orden creada con exito! ID: ${orderID}`);
-      DeleteCart(cartID, userID);
-      OrdersView(userID);
-    })
-    .catch((err)=>{console.log(err)})
-
+      .then((res) => {
+        if (res.ok) {
+          DeleteCart(cartID, userID);
+          OrdersView(userID);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (error) {
     console.log(error);
   }
@@ -152,9 +148,9 @@ async function CreateOrder(cartID, userID) {
 
 orderBtn.addEventListener("click", (e) => {
   const cartID = document.getElementById("IDcartUser").textContent;
-  e.preventDefault()
-  e.stopPropagation()
-  CreateOrder(cartID, userID)
-})
+  e.preventDefault();
+  e.stopPropagation();
+  CreateOrder(cartID, userID);
+});
 
 CartView();
