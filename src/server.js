@@ -10,6 +10,7 @@ import RouterCart from "./router/carts_router.js";
 import RouterSession from "./router/session_router.js";
 import RouterOrders from "./router/orders_router.js";
 import RouterHome from "./router/home_router.js";
+import RouterMessages from "./router/messages_router.js"
 import { session_key, urlMongoDB } from "../config/dotenv_config.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
@@ -19,12 +20,14 @@ import { PassportLogic } from "../config/passport_config.js";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import getConnectionMongoDB from "./DB/connection.js";
+import { Server } from "socket.io";
 
 const connection = getConnectionMongoDB();
 await connection.MongoDB_Connect();
 
 const app = express();
 export const server = createServer(app);
+export const io = new Server(server);
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -67,6 +70,7 @@ app.use("/api/products", RouterProds);
 app.use("/api/cart", RouterCart);
 app.use("/session", RouterSession);
 app.use("/orders", RouterOrders);
+app.use("/chat", RouterMessages)
 app.use("/", RouterHome);
 
 app.use("*", (req, res) => {

@@ -28,6 +28,7 @@ export function orderDTO(user, products) {
           userID: user._id.toString(),
         },
         products: products,
-        total: TotalPrice(products)
+        total: TotalPrice(products),
+        status: "generated"
     }
 }

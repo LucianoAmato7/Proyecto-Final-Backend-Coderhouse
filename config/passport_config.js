@@ -1,13 +1,38 @@
 import passport from "passport";
 import bcrypt from "bcrypt";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { logger } from "./winston_config.js";
 import {
   FindUser_controller,
   SaveUser_controller,
 } from "../src/controllers/session_controller.js";
+import { JWT_secret_key } from "../config/dotenv_config.js"
 
 export function PassportLogic() {
+
+  // const jwtOptions = {
+  //   secretOrKey: JWT_secret_key,
+  //   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  // };
+
+  // passport.use(
+  //   new JwtStrategy(jwtOptions, async (payload, done) => {
+  //     try {
+  //       const user = await FindUser_controller(payload.email);
+
+  //       if (!user) {
+  //         return done(null, false);
+  //       }
+
+  //       return done(null, user);
+  //     } catch (err) {
+  //       logger.error(`Error en la estrategia de JWT: ${err}`);
+  //       return done(err);
+  //     }
+  //   })
+  // );
+
   passport.use(
     "login",
     new LocalStrategy(
@@ -33,6 +58,9 @@ export function PassportLogic() {
               message: "La contraseña es incorrecta",
             });
           }
+
+          // const token = generateToken({ userId: userData.id });
+          //CREAR Y DEVOLVER TOKEN EN VEZ DE USER
           return done(null, user);
         } catch (err) {
           logger.error(`Error en la estrategia de registro: ${err}`);
@@ -78,6 +106,8 @@ export function PassportLogic() {
 
           await SaveUser_controller(userData);
 
+          //CREAR Y DEVOLVER TOKEN EN VEZ DE USER
+
           return done(null, userData);
         } catch (err) {
           logger.error(`Error en la estrategia de registro: ${err}`);
@@ -108,3 +138,18 @@ export function checkAuthentication(req, res, next) {
     res.redirect("/session/login");
   }
 }
+
+// export function checkAuthentication(req, res, next) {
+//   passport.authenticate("jwt", { session: false }, (err, user, info) => {
+//     if (err) {
+//       return next(err);
+//     }
+
+//     if (!user) {
+//       return res.redirect("/session/login");
+//     }
+
+//     req.user = user;
+//     next();
+//   })(req, res, next);
+// }

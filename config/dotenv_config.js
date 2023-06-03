@@ -11,4 +11,5 @@ export const admin_password = process.env.ADMIN_PASSWORD;
 export const accountSID = process.env.ACCOUNTSID;
 export const authToken = process.env.AUTHTOKEN;
 export const twilio_PhoneNumber = process.env.TWILIO_PHONE;
-export const session_key = process.env.SESSIONKEY
+export const session_key = process.env.SESSIONKEY;
+export const JWT_secret_key = process.env.JWT_SECRET;

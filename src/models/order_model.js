@@ -7,7 +7,8 @@ const orderSchema = new mongoose.Schema(
     timestamp: String,
     user: Object,
     products: Array,
-    total: Number
+    total: Number,
+    status: String
   },
   {
     versionKey: false,

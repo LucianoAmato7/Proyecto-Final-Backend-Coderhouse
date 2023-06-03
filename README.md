@@ -1,4 +1,10 @@
 # RUTAS
+
+## HOME 
+
+`/ (GET)`  
+-plantilla de inicio.
+
 ## PRODUCTOS
 
 `/api/products (GET)`
@@ -67,6 +73,13 @@
 `/session/logout (GET)`
 -Destruye la sesión y desconecta la base de datos.
 
+## MENSAJES
+
+`/chat/ (GET)`
+-Redirige a la vista del chat general, en donde entra la lógica de WebSocket.
+
+`/chat/:email (GET)`
+-Lista los mensajes coincidentes a un email en especifico.
 
 
 # SERVIDOR:
@@ -95,6 +108,6 @@
 ## TODO 
 -que permitan crear un ambiente para desarrollo y otro para producción, elegibles desde la variable de environment NODE_ENV al desplegar la aplicación
 
--El menú de registro consta del nombre completo del cliente, número telefónico, email y campo de password duplicado para verificar coincidencia.
+-Archivo externo apra configurar produccion o desarrollo. + Variables configurables (PORT, DB, EMAIL, ETC)
 
--Mover ruta "/" a router
+-PASSPORT-JWT VER EN CHATGPT
