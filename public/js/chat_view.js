@@ -20,7 +20,7 @@ function AddMensaje() {
   const message = document.getElementById("sendMsj").value;
   socket.emit("newMessage", message);
   return false;
-}
+};
 
 document.getElementById("btnMsj").addEventListener("click", (e) => {
   e.stopPropagation();

@@ -25,7 +25,6 @@ class UserDaoMongoDB {
     try {
       const userToSave = new this.model(newUser);
       userToSave.save();
-      logger.info(`Usuario: ${newUser.username} registrado con exito!`);
     } catch (error) {
       logger.error(error);
     }

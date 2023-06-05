@@ -109,5 +109,3 @@
 -que permitan crear un ambiente para desarrollo y otro para producción, elegibles desde la variable de environment NODE_ENV al desplegar la aplicación
 
 -Archivo externo apra configurar produccion o desarrollo. + Variables configurables (PORT, DB, EMAIL, ETC)
-
--PASSPORT-JWT VER EN CHATGPT

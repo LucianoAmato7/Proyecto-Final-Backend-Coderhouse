@@ -3,10 +3,11 @@ import {
   ListMsjsByEmail_controller,
   WebSocket_controller
 } from "../controllers/messages_controller.js";
+import { checkAuthentication } from "../../config/passport_config.js";
 
 const router = Router();
 
-router.get("/", WebSocket_controller);
+router.get("/", checkAuthentication, WebSocket_controller);
 
 router.get("/:email", ListMsjsByEmail_controller);
 

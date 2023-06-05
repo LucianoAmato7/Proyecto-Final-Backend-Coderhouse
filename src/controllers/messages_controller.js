@@ -2,25 +2,31 @@ import messages_repository from "../repository/messages_repository.js";
 import { logger } from "../../config/winston_config.js";
 import { io } from "../server.js";
 
+let isWebSocketInitialized = false
+
 export const WebSocket_controller = async (req, res) => {
 
   let user = req.session.user;
 
   res.render("chat");
 
-  io.on("connection", (socket) => {
-    ListMsjs_controller()
-    .then((msjs) => {
-        socket.emit("messages", msjs);
-    });
+  if(!isWebSocketInitialized){
 
-    socket.on("newMessage", (msj) => {
-      SaveMsj_controller(msj, user)
-        .then((msjs) => {
-            io.sockets.emit("messages", msjs);
-        });
+    io.on("connection", (socket) => {
+      ListMsjs_controller()
+      .then((msjs) => {
+          socket.emit("messages", msjs);
+      });
+  
+      socket.on("newMessage", (msj) => {
+        SaveMsj_controller(msj, user)
+          .then((msjs) => {
+              io.sockets.emit("messages", msjs);
+          });
+      });
     });
-  });
+    isWebSocketInitialized = true
+  }
 };
 
 const ListMsjs_controller = async () => {

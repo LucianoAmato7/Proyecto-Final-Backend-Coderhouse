@@ -8,6 +8,7 @@ import {
   Register_Fail_controller,
   Register_Render_controller,
 } from "../controllers/session_controller.js";
+import { checkAuthentication } from "../../config/passport_config.js"
 
 const router = Router();
 
@@ -23,6 +24,6 @@ router.get("/faillogin", Login_Fail_controller);
 
 router.get("/failregister", Register_Fail_controller);
 
-router.post("/logout", Logout_controller);
+router.post("/logout", checkAuthentication, Logout_controller);
 
 export default router;

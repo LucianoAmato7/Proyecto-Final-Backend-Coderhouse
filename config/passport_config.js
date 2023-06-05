@@ -1,37 +1,14 @@
 import passport from "passport";
 import bcrypt from "bcrypt";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { logger } from "./winston_config.js";
 import {
   FindUser_controller,
   SaveUser_controller,
 } from "../src/controllers/session_controller.js";
-import { JWT_secret_key } from "../config/dotenv_config.js"
+import { GenerateToken, DecodeToken } from "../config/jsonwebtoken.js";
 
 export function PassportLogic() {
-
-  // const jwtOptions = {
-  //   secretOrKey: JWT_secret_key,
-  //   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  // };
-
-  // passport.use(
-  //   new JwtStrategy(jwtOptions, async (payload, done) => {
-  //     try {
-  //       const user = await FindUser_controller(payload.email);
-
-  //       if (!user) {
-  //         return done(null, false);
-  //       }
-
-  //       return done(null, user);
-  //     } catch (err) {
-  //       logger.error(`Error en la estrategia de JWT: ${err}`);
-  //       return done(err);
-  //     }
-  //   })
-  // );
 
   passport.use(
     "login",
@@ -58,12 +35,14 @@ export function PassportLogic() {
               message: "La contraseña es incorrecta",
             });
           }
+          const access_token = GenerateToken({ user });
 
-          // const token = generateToken({ userId: userData.id });
-          //CREAR Y DEVOLVER TOKEN EN VEZ DE USER
-          return done(null, user);
+          logger.info(`Usuario: ${user.username} ingresa con exito`);
+
+          return done(null, access_token);
         } catch (err) {
-          logger.error(`Error en la estrategia de registro: ${err}`);
+          logger.error(`Error en la estrategia de login: ${err}`);
+          return done(err);
         }
       }
     )
@@ -106,9 +85,11 @@ export function PassportLogic() {
 
           await SaveUser_controller(userData);
 
-          //CREAR Y DEVOLVER TOKEN EN VEZ DE USER
+          const access_token = GenerateToken({ userData })
 
-          return done(null, userData);
+          logger.info(`Usuario: ${userData.name} registrado con exito!`);
+
+          return done(null, access_token);
         } catch (err) {
           logger.error(`Error en la estrategia de registro: ${err}`);
           return done(err);
@@ -131,25 +112,21 @@ export function PassportLogic() {
   });
 }
 
-export function checkAuthentication(req, res, next) {
-  if (req.isAuthenticated()) {
+//UTILIZA JWT
+export async function checkAuthentication(req, res, next) {
+  try {  
+    const access_token = req.cookies.token;
+    if (!access_token) {
+      return res.redirect("/session/login");
+    }
+    const UserFromToken = DecodeToken(access_token);
+    const user = await FindUser_controller(UserFromToken.user._id);
+    if (!user) {
+      return res.redirect("/session/login");
+    }
     next();
-  } else {
-    res.redirect("/session/login");
+  } catch (err) {
+    logger.error(`Error en checkAuthentication: ${err}`);
+    next(err);
   }
 }
-
-// export function checkAuthentication(req, res, next) {
-//   passport.authenticate("jwt", { session: false }, (err, user, info) => {
-//     if (err) {
-//       return next(err);
-//     }
-
-//     if (!user) {
-//       return res.redirect("/session/login");
-//     }
-
-//     req.user = user;
-//     next();
-//   })(req, res, next);
-// }
