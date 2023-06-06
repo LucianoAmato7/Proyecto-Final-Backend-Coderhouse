@@ -10,7 +10,7 @@ import RouterCart from "./router/carts_router.js";
 import RouterSession from "./router/session_router.js";
 import RouterOrders from "./router/orders_router.js";
 import RouterHome from "./router/home_router.js";
-import RouterMessages from "./router/messages_router.js"
+import RouterMessages from "./router/messages_router.js";
 import { session_key, urlMongoDB } from "../config/dotenv_config.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
@@ -18,20 +18,21 @@ import passport from "passport";
 import cluster from "cluster";
 import { PassportLogic } from "../config/passport_config.js";
 import { dirname, join } from "path";
+import path from "path";
 import { fileURLToPath } from "url";
 import getConnectionMongoDB from "./DB/connection.js";
 import { Server } from "socket.io";
+import { database_type } from "../config/dotenv_config.js";
 
 const connection = getConnectionMongoDB();
 await connection.MongoDB_Connect();
-
 const app = express();
 export const server = createServer(app);
 export const io = new Server(server);
-
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
 const publicPath = join(__dirname, "..", "public");
+const args = minimist(process.argv.slice(2), []);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -70,8 +71,23 @@ app.use("/api/products", RouterProds);
 app.use("/api/cart", RouterCart);
 app.use("/session", RouterSession);
 app.use("/orders", RouterOrders);
-app.use("/chat", RouterMessages)
+app.use("/chat", RouterMessages);
 app.use("/", RouterHome);
+
+app.get("/info", (req, res) => {
+  const info = {
+    args: args._[0] || args["port"] || args["p"] || JSON.stringify(args),
+    platform: process.platform,
+    version: process.version,
+    memory: process.memoryUsage().rss,
+    path: process.cwd(),
+    pid: process.pid,
+    folder: path.dirname(new URL(import.meta.url).pathname),
+    dataBase: database_type,
+  };
+
+  res.render("info", { info });
+});
 
 app.use("*", (req, res) => {
   logger.warn(
@@ -84,9 +100,8 @@ app.use("*", (req, res) => {
   });
 });
 
-//INICIAMOS EL SERVIDOR // FORK O CLUSTER.
+//INICIAMOS EL SERVIDOR // FORK O CLUSTER // PUERTO CONFIGURABLE.
 
-const args = minimist(process.argv.slice(2), []);
 const numCPUs = os.cpus().length;
 const modo = args["m"];
 const PORT = args._[0] || args["port"] || args["p"] || 8080;

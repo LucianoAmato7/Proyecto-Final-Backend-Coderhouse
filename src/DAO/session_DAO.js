@@ -1,5 +1,6 @@
 import { user_Model } from "../models/user_model.js";
 import { logger } from "../../config/winston_config.js";
+import { Email_NewUser } from "../../config/nodemailer_config.js"
 import mongoose from "mongoose";
 
 class UserDaoMongoDB {
@@ -25,6 +26,13 @@ class UserDaoMongoDB {
     try {
       const userToSave = new this.model(newUser);
       userToSave.save();
+
+      await Email_NewUser(newUser)
+      .then(() => {
+        logger.info("Email de aviso de nuevo usuario registrado enviado con exito!");
+      })
+      .catch((error) => logger.error(error));
+
     } catch (error) {
       logger.error(error);
     }

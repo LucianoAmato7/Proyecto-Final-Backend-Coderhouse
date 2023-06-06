@@ -5,7 +5,6 @@ import { logger } from "../../config/winston_config.js";
 import { orderDTO } from "../DTO/order_DTO.js";
 import { Email_NewOrder } from "../../config/nodemailer_config.js";
 import { MsjToUser_Twilio } from "../../config/twilio_config.js";
-import mongoose from "mongoose";
 
 class OrdersDaoMongoDB {
   constructor() {

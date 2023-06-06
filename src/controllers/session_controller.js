@@ -32,7 +32,6 @@ export const Register_Render_controller = (req, res) => {
 export const Register_Authenticate_controller = (req, res, next) => {
   upload.single("image")(req, res, () => {
     passport.authenticate("register", (err, access_token) => {
-      console.log("se ejecuta Register_Authenticate_controller");
       if (err) {
         logger.error(`Error en Register_Authenticate_controller: ${err}`)
         return res.redirect("/session/failregister");

@@ -75,11 +75,16 @@
 
 ## MENSAJES
 
-`/chat/ (GET)`
+`/chat (GET)`
 -Redirige a la vista del chat general, en donde entra la lógica de WebSocket.
 
 `/chat/:email (GET)`
 -Lista los mensajes coincidentes a un email en especifico.
+
+## INFO
+
+`/info`
+-Nos permite ver la configuración del servidor.
 
 
 # SERVIDOR:
@@ -103,9 +108,3 @@
 -`pm2 stop 1` | detengo el proceso con id "1".
 -`pm2 delete 1` | elimino el proceso con id "1".
 -`pm2 delete all o server` | elimino todos los procesos.
-
-
-## TODO 
--que permitan crear un ambiente para desarrollo y otro para producción, elegibles desde la variable de environment NODE_ENV al desplegar la aplicación
-
--Archivo externo apra configurar produccion o desarrollo. + Variables configurables (PORT, DB, EMAIL, ETC)
