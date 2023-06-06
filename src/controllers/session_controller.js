@@ -4,7 +4,12 @@ import session_repository from "../repository/session_repository.js";
 import { logger } from "../../config/winston_config.js";
 
 export const Login_Render_controller = (req, res) => {
-  res.render("login");
+  try{
+    res.render("login");
+  }catch(err){
+    logger.error(`Error en Login_Render_controller: ${err}`);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const Login_Authenticate_controller = (req, res, next) => {
@@ -26,7 +31,12 @@ export const Login_Authenticate_controller = (req, res, next) => {
 };
 
 export const Register_Render_controller = (req, res) => {
-  res.render("register");
+  try{
+    res.render("register");
+  }catch(err){
+    logger.error(`Error en Register_Render_controller: ${err}`);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const Register_Authenticate_controller = (req, res, next) => {
@@ -41,8 +51,8 @@ export const Register_Authenticate_controller = (req, res, next) => {
       }
       req.session.destroy((error) => {
         if (error) {
-          logger.error(`Error al destruir la session ${error}`);
-          return;
+          logger.error(`Error al destruir la sesión: ${error}`);
+          return
         }
       });
       res.redirect("/session/login");
@@ -51,31 +61,54 @@ export const Register_Authenticate_controller = (req, res, next) => {
 };
 
 export const Login_Fail_controller = (req, res) => {
-  res.render("failLogin");
+  try{
+    res.render("failLogin");
+  }catch(err){
+    logger.error(`Error en Login_Fail_controller: ${err}`);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const Register_Fail_controller = (req, res) => {
-  res.render("failRegister");
+  try{
+    res.render("failRegister");
+  }catch(err){
+    logger.error(`Error en Register_Fail_controller: ${err}`);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const Logout_controller = (req, res) => {
-  const user = req.session.user;
-  req.session.destroy((error) => {
-    if (error) {
-      logger.error(`Error al destruir la session ${error}`);
-      return;
-    } else {
-      res.clearCookie('token');
-      res.render("logout", { user });
-    }
-  });
+  try{
+    const user = req.session.user;
+    req.session.destroy((error) => {
+      if (error) {
+        logger.error(`Error al destruir la sesión: ${error}`);
+        return res.status(500).json({ error: "Error en el servidor" });
+      } else {
+        res.clearCookie('token');
+        res.render("logout", { user });
+      }
+    });
+  }catch(err){
+    logger.error(`Error en Logout_controller: ${err}`);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const FindUser_controller = async (email) => {
-  const user = await session_repository.findOne(email);
-  return user;
+  try{
+    const user = await session_repository.findOne(email);
+    return user;
+  }catch(err){
+    logger.error(`Error en FindUser_controller: ${err}`);
+  }
 };
 
 export const SaveUser_controller = async (userData) => {
-  await session_repository.save(userData);
+  try{
+    await session_repository.save(userData);
+  }catch(err){
+    logger.error(`Error en SaveUser_controller: ${err}`);
+  }
 };

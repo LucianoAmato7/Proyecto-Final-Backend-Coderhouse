@@ -108,3 +108,7 @@
 -`pm2 stop 1` | detengo el proceso con id "1".
 -`pm2 delete 1` | elimino el proceso con id "1".
 -`pm2 delete all o server` | elimino todos los procesos.
+
+## NOTAS: 
+
+-`express-handlebars` utiliza la versión 6.0.6 para el optimo funcionamiento de la aplicación.
