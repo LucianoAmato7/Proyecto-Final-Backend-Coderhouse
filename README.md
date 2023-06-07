@@ -3,7 +3,7 @@
 ## HOME 
 
 `/ (GET)`  
--plantilla de inicio.
+-plantilla de inicio con datos de las sesión.
 
 ## PRODUCTOS
 

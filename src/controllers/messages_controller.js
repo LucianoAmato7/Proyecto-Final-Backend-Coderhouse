@@ -3,15 +3,16 @@ import { logger } from "../../config/winston_config.js";
 import { io } from "../server.js";
 
 let isWebSocketInitialized = false;
+let activeSocket = null;
 
 export const WebSocket_controller = async (req, res) => {
   try {
-    let user = req.session.user;
-
     res.render("chat");
 
     if (!isWebSocketInitialized) {
       io.on("connection", (socket) => {
+        activeSocket = socket; // Almacenar la conexión activa
+
         ListMsjs_controller()
           .then((msjs) => {
             socket.emit("messages", msjs);
@@ -25,6 +26,7 @@ export const WebSocket_controller = async (req, res) => {
           });
 
         socket.on("newMessage", (msj) => {
+          let user = req.session.user;
           SaveMsj_controller(msj, user)
             .then((msjs) => {
               io.sockets.emit("messages", msjs);
@@ -39,10 +41,17 @@ export const WebSocket_controller = async (req, res) => {
         });
       });
       isWebSocketInitialized = true;
+    } else {
+      // Si la conexión ya está inicializada, cerrar la conexión anterior
+      activeSocket.disconnect();
+      activeSocket = null;
     }
   } catch (err) {
     const errorMessage = "Error al iniciar el chat.";
-    logger.error(`En el CONTROLLER WebSocket_controller: ${errorMessage}`, err);
+    logger.error(
+      `En el CONTROLLER WebSocket_controller: ${errorMessage}`,
+      err
+    );
     res.status(500).json({ error: errorMessage });
   }
 };
