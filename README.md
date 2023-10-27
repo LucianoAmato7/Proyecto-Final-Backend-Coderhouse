@@ -91,13 +91,13 @@
 ## CLUSTER O FORK:
 -`node server.js -m` | Se ejecuta, dependiendo del valor del argumento "-m" (CLUSTER O FORK), en modo CLUSTER o FORK:
 -`node server.js -m cluster` | modo cluster con los máximos procesos posibles.
--`node server.js -m fork` | modo fork
+-`node server.js -m fork` | modo fork.
 -`node server.js` | Se ejecuta el servidor en modo FORK por default.
--`kill (PID)` | EN MODO CLUSTER (Si se mata una terminal se levanta una nueva)
+-`kill (PID)` | EN MODO CLUSTER (Si se mata una terminal se levanta una nueva).
 
 ## FOREVER:
 (fork)
--`forever start server.js`
+-`forever start server.js`.
 -`forever list` | listo todos los procesos.
 -`forever stopall` | detendo todos los procesos.
 
@@ -108,6 +108,28 @@
 -`pm2 stop 1` | detengo el proceso con id "1".
 -`pm2 delete 1` | elimino el proceso con id "1".
 -`pm2 delete all o server` | elimino todos los procesos.
+
+## DEPENDENCIAS:
+
+`bcrypt`: "^5.1.0". 
+`compression`: "^1.7.4". 
+`connect-mongo`: "^5.0.0". 
+`cookie-parser`: "^1.4.6". 
+`dotenv`: "^16.0.3". 
+`express`: "^4.18.2". 
+`express-handlebars`: "^6.0.6". 
+`express-session`: "^1.17.3". 
+`jsonwebtoken`: "^9.0.0". 
+`minimist`: "^1.2.8". 
+`mongodb`: "^5.5.0". 
+`mongoose`: "^7.2.1". 
+`multer`: "^1.4.5-lts.1". 
+`nodemailer`: "^6.9.2". 
+`passport`: "^0.6.0". 
+`passport-local`: "^1.0.0". 
+`socket.io`: "^4.6.2". 
+`twilio`: "^4.11.1". 
+`winston`: "^3.8.2". 
 
 ## NOTAS: 
 
